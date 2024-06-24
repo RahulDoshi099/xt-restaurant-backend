@@ -1,6 +1,7 @@
-// src/entities/dish.entity.ts
-import { Group } from 'src/modules/group/entities/group.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+// src/modules/dishes/entities/dish.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Group } from '../../group/entities/group.entity';
+import { OrderItem } from 'src/modules/orders/entities/order-item.entity';
 
 @Entity()
 export class Dish {
@@ -16,6 +17,9 @@ export class Dish {
   @Column()
   image: string;
 
-  @ManyToOne(() => Group, group => group.dishes)
+  @ManyToOne(() => Group, group => group.dishes, { nullable: false })
   group: Group;
+
+  @OneToMany(() => OrderItem, orderItem => orderItem.dish)
+  orderItems: OrderItem[];
 }

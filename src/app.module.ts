@@ -1,19 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/database';
-import { Group } from './modules/group/entities/group.entity';
-import { Dish } from './modules/dishes/entities/dish.entity';
-import { GroupController } from './modules/group/group.controller';
-import { DishController } from './modules/dishes/dish.controller';
-import { GroupService } from './modules/group/group.service';
-import { DishService } from './modules/dishes/dish.service';
+import { UserModule } from './modules/user/user.module';
+import { GroupModule } from './modules/group/group.module';
+import { DishesModule } from './modules/dishes/dishes.module';
+import { OrderModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
-    TypeOrmModule.forFeature([Group, Dish]),
+    GroupModule,
+    DishesModule,
+    UserModule,
+    OrderModule
   ],
-  controllers: [GroupController, DishController],
-  providers: [GroupService, DishService],
 })
 export class AppModule {}

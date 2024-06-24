@@ -1,15 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
-import { Dish } from '../../dishes/entities/dish.entity';
+// src/modules/orders/entities/order.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { OrderItem } from './order-item.entity';
 
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => Dish)
-  @JoinTable()
-  dishes: Dish[];
+  @ManyToOne(() => User, user => user.orders)
+  user: User;
 
-  @Column('decimal')
+  @OneToMany(() => OrderItem, item => item.order, { cascade: true })
+  dishes: OrderItem[];
+
+  @Column('decimal', { precision: 10, scale: 2 })
   totalPrice: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

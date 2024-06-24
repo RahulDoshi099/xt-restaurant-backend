@@ -1,5 +1,4 @@
-// src/dish/dish.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDishDto } from './dto/create-dish.dto';
@@ -15,14 +14,22 @@ export class DishService {
     private groupRepository: Repository<Group>,
   ) {}
 
-  async create(createDishDto: any): Promise<any> {
-    const group = await this.groupRepository.findOne(createDishDto.groupId);
+  async create(createDishDto: CreateDishDto): Promise<Dish> {
+    const { groupId, name, ...dishData } = createDishDto;
+
+    const group = await this.groupRepository.findOne({ where: { id: groupId } });
     if (!group) {
-      throw new Error('Group not found');
+      throw new NotFoundException('Group not found');
+    }
+
+    const existingDish = await this.dishRepository.findOne({ where: { name } });
+    if (existingDish) {
+      throw new ConflictException('A dish with this name already exists');
     }
 
     const dish = this.dishRepository.create({
-      ...createDishDto,
+      ...dishData,
+      name,
       group,
     });
     return this.dishRepository.save(dish);
@@ -30,5 +37,14 @@ export class DishService {
 
   async findAll(): Promise<Dish[]> {
     return this.dishRepository.find({ relations: ['group'] });
+  }
+
+  async findOneById(dishId: number): Promise<Dish> {
+    const dish = await this.dishRepository.findOne({ where: { id: dishId } }); // Simply pass the ID as argument
+    
+    if (!dish) {
+      throw new NotFoundException(`Dish with ID ${dishId} not found`);
+    }
+    return dish;
   }
 }
