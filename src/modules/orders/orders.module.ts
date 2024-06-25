@@ -8,9 +8,10 @@ import { OrderService } from './orders.service';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { DishService } from '../dishes/dish.service';
+import { Group } from '../group/entities/group.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order, OrderItem, User, Dish])],
+  imports: [TypeOrmModule.forFeature([Order,Group, OrderItem, User, Dish])],
   controllers: [OrderController],
   providers: [OrderService, UserService,DishService],
 })
