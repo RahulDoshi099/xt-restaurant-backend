@@ -14,9 +14,9 @@ export class OrderItem {
   @ManyToOne(() => Dish, dish => dish.orderItems)
   dish: Dish;
 
-  @Column()
+  @Column('int')
   quantity: number;
 
-  @Column()
+  @Column('int')
   groupId: number; 
 }

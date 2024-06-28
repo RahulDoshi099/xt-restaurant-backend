@@ -14,6 +14,9 @@ export class User {
   email: string;
 
   @Column()
+  password: string; 
+
+  @Column()
   phone: string;
 
   @Column({ type: 'date' }) 

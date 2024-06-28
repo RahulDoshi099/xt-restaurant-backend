@@ -47,6 +47,12 @@ export class UserService {
     });
   }
 
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.userRepository.findOne({
+      where: [{ email }],
+    });
+  }
+
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -60,5 +66,9 @@ export class UserService {
     if (result.affected === 0) {
       throw new NotFoundException('User not found');
     }
+  }
+
+  async validateUserById(id: number): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { id } });
   }
 }
